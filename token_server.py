@@ -111,7 +111,7 @@ async def create_token(
         logger.info(f"Token generated for {identity} in room {room}")
         
         # Start new agent for this room
-        await start_new_agent(room)
+        #await start_new_agent(room)
         
         return {
             "accessToken": jwt_token,
@@ -216,28 +216,6 @@ def increment_counter():
         f.write(str(counter))
     return counter
 
-async def start_new_agent(room_name: str):
-    """Start agent for Linux environment"""
-    global current_agent_process, current_room_name
-    
-    # Kill existing agent if any
-    if current_agent_process:
-        try:
-            current_agent_process.terminate()
-            current_agent_process.wait()
-            logger.info(f"Killed previous agent in room {current_room_name}")
-        except:
-            pass
-    
-    # Start new agent (Linux compatible)
-    current_agent_process = subprocess.Popen(
-        ["python", "-u", "avatar_agent.py", "connect", "--room", room_name],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
-    current_room_name = room_name
-    
-    logger.info(f"Started new Avatar agent for room {room_name}")
 
 
 if __name__ == "__main__":
