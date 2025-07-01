@@ -17,7 +17,7 @@ from openai.types.beta.realtime.session import InputAudioTranscription, TurnDete
 
 # Load environment variables
 load_dotenv()
-
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # Set up detailed logging
 logging.basicConfig(
     level=logging.DEBUG,
@@ -85,7 +85,7 @@ async def entrypoint(ctx: agents.JobContext):
         realtime_model = openai.realtime.RealtimeModel(
             model="gpt-4o-realtime-preview-2024-12-17",
             voice="echo",
-            api_key="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",
+            api_key=OPENAI_API_KEY,
             input_audio_transcription=InputAudioTranscription(
                 model="gpt-4o-transcribe",
                 language="en",
