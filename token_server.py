@@ -217,34 +217,27 @@ def increment_counter():
     return counter
 
 async def start_new_agent(room_name: str):
-    """Start a new Avatar agent for a specific room in a new terminal window"""
+    """Start agent for Linux environment"""
     global current_agent_process, current_room_name
     
     # Kill existing agent if any
     if current_agent_process:
         try:
-            parent = psutil.Process(current_agent_process.pid)
-            for child in parent.children(recursive=True):
-                child.kill()
-            parent.kill()
+            current_agent_process.terminate()
+            current_agent_process.wait()
             logger.info(f"Killed previous agent in room {current_room_name}")
         except:
             pass
-
-    # Start new agent with room name in new terminal
-    cmd = (
-        f'start powershell.exe -NoExit -Command "'
-        f'./venv/Scripts/activate; '
-        f'python -u avatar_agent.py connect --room {room_name}"'
-    )
     
+    # Start new agent (Linux compatible)
     current_agent_process = subprocess.Popen(
-        cmd,
-        shell=True
+        ["python", "-u", "avatar_agent.py", "connect", "--room", room_name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
     )
     current_room_name = room_name
     
-    logger.info(f"Started new Avatar agent for room {room_name} in new terminal")
+    logger.info(f"Started new Avatar agent for room {room_name}")
 
 
 if __name__ == "__main__":
